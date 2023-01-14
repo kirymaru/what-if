@@ -1,18 +1,20 @@
+<!-- eslint-disable prettier/prettier -->
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="Vue logo" src="../assets/logo.png" />
+
+    <h1>ajia</h1>
+    <button @click="gotodaybook" class="btn btn-primary">sadan</button>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
-}
+  methods: {
+    gotodaybook() {
+      this.$router.push({ name: "no-entry" });
+    },
+  },
+};
 </script>
