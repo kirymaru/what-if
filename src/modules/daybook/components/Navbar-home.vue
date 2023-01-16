@@ -9,7 +9,7 @@
                 Diario
         </a>
         <div class="d-flex">
-            <a class="navbar-brand text-white " href="http://about">about</a>
+            <a class="navbar-brand text-white " href="./">about</a>
             <button class="btn btn btn-outline-info"><i class="fa fa-sign-out-alt"></i></button>
         </div>
     </nav>

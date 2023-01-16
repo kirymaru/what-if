@@ -1,10 +1,24 @@
 //export const myactions = (commit) => {
 
+import diarioApi from "@/api/diarioapi"
+import { setEntries } from "./mutations"
+
 //}
 
 
 
-export const loadEntry = (commit) => {
+export const loadEntries = async({ commit }) => {
+
+    const { data } = await diarioApi.get('/entries.json')
+    const entries = []
+    for (let id of Object.keys(data)) {
+        entries.push({
+            id,
+            ...data[id]
+        })
+    }
+    commit('setEntries', entries)
+
 
 }
 

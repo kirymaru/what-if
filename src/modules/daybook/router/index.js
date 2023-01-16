@@ -13,6 +13,11 @@
              name: 'entry',
              component: () =>
                  import ( /* webpackChunkName: "entry" */ "@/modules/daybook/views/entryview.vue"),
+             props: (route) => {
+                 return {
+                     id: route.params.id
+                 }
+             }
          }
 
      ]
