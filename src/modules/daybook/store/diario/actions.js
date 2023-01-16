@@ -10,6 +10,11 @@ import { setEntries } from "./mutations"
 export const loadEntries = async({ commit }) => {
 
     const { data } = await diarioApi.get('/entries.json')
+
+    if (!data) {
+        commit('setEntries', [])
+        return
+    }
     const entries = []
     for (let id of Object.keys(data)) {
         entries.push({
@@ -36,6 +41,24 @@ export const updateEntry = async({ commit }, entry) => {
 
 
 
-export const createEntry = async(commit) => {
+export const createEntry = async({ commit }, entry) => {
+    const { date, picture, text } = entry
+    const dataToSave = { date, picture, text }
 
+    const { data } = await diarioApi.post(`/entries.json`, dataToSave)
+
+    dataToSave.id = data.name
+
+    commit('addEntry', dataToSave)
+
+
+
+    return data.name
+}
+export const deleteEntry = async({ commit }, id) => {
+
+    await diarioApi.delete(`/entries/${ id }.json`)
+    commit('deleteEntry', id)
+
+    return id
 }
