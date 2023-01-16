@@ -31,9 +31,10 @@
       </div>
 
 
-  <Fab
+  <Fab 
       icon='fa-save'
-  />
+      @on:click='saveEntry'
+    />
 
   <img src="https://www.infobae.com/new-resizer/k-Qmsa8nLfFCfmVxTVjAFAMESws=/992x606/filters:format(webp):quality(85)/cloudfront-us-east-1.images.arcpublishing.com/infobae/LXP67FGCI5CFJOEIUWDXE6NE3M.jpg" 
       alt="entry-image"
@@ -42,7 +43,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
-import { mapGetters  } from 'vuex'
+import { mapGetters, mapActions  } from 'vuex'
 
 import   getDayYearsMonth from '../helpers/getDayYearMonth'
 
@@ -64,6 +65,8 @@ export default {
             }
           }
       },
+
+       
 
       computed:{
         ...mapGetters(['getEntriesById']),
@@ -87,13 +90,35 @@ export default {
 
       methods: {
 
+      ...mapActions(['updateEntry']),
 
       loadEntry(){
-      const entry =this.getEntriesById(this.id)
-          if (!entry) return this.$router.push({name: 'no-entry'})
-          this.entry= entry 
+          let entry;
+
+          if (this.id==='new'){
+              entry={
+                text:'',
+                date: new Date().getTime()
+              }
+          }
+          else{
+            entry =this.getEntriesById(this.id)
+            if (!entry) return this.$router.push({name: 'no-entry'})
 
           }
+            this.entry= entry 
+
+
+          },
+      async saveEntry() {
+           if(this.entry.id){
+
+             await this.updateEntry(this.entry)
+           }
+           else{
+            console.log('nueva entrada')
+           }
+        }
           },
 
       created() {
