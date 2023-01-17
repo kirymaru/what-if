@@ -118,7 +118,7 @@ export default {
       },
 
     methods: {
-
+      
       ...mapActions(['updateEntry','createEntry','deleteEntry']),
 
       loadEntry(){
