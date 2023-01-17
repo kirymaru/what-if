@@ -2,6 +2,7 @@
  <template>
     <Navbar />
 
+        
     <div 
       class="d-flex">
         <div class="col-4">
@@ -30,11 +31,13 @@
           },
 
           computed: {
-              ...mapState(['isLoading'])
+              ...mapState(['isLoading']),
+
           },
 
           created() {
                 this.loadEntries()
+                
             },
 
     }

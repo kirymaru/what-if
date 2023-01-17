@@ -1,4 +1,4 @@
-<!-- eslint-disable prettier/prettier -->
+ 
 <template>
     <nav class="navbar bg-primary"> 
         <a class="navbar-brand text-white">

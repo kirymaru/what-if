@@ -11,7 +11,17 @@
 
       <input type="file"
             @change="onSelectedImage"
-            ref="imageSelector">
+            ref="imageSelector"
+            v-show="false"
+            accept="image/png, image/jpeg, image/jpg, image/web"
+            >
+
+      <button class="btn btn-primary "
+          @click="onSelectImage">
+          Subir foto
+          <i class="fa fa-upload"></i>
+      </button>
+
 
       <button 
           v-if="entry.id"
@@ -21,11 +31,6 @@
           <i class="fa fa-trash-alt"></i>
       </button>
 
-      <button class="btn btn-primary "
-      @click="onSelectImage">
-          Subir foto
-          <i class="fa fa-upload"></i>
-      </button>
     </div>
   
   </div>
@@ -44,12 +49,13 @@
       icon='fa-save'
       @on:click='saveEntry'
     />
-
-  <!--img src="https://www.infobae.com/new-resizer/k-Qmsa8nLfFCfmVxTVjAFAMESws=/992x606/filters:format(webp):quality(85)/cloudfront-us-east-1.images.arcpublishing.com/infobae/LXP67FGCI5CFJOEIUWDXE6NE3M.jpg" 
+ 
+ 
+  <img 
+      v-if="entry.picture && !localImage"
+      :src="entry.picture"
       alt="entry-image"
-      class="img-thumbnail"-->
-
-
+      class="img-thumbnail">
  
   <img 
       v-if="localImage"
@@ -66,7 +72,7 @@ import { mapGetters, mapActions  } from 'vuex'
 import Swal from 'sweetalert2'
 
 import   getDayYearsMonth from '../helpers/getDayYearMonth'
-
+import uploadImage from '../helpers/uploadImage'
 export default {
 
         props:{
@@ -82,7 +88,9 @@ export default {
           return{
             entry:'',
             localImage:null,
-            file:null
+            file:null,
+
+            
              
           }
       },
@@ -132,24 +140,31 @@ export default {
 
           },
       async saveEntry() {
-           if(this.entry.id){
-
-            new Swal ({
-              title:'Espere un momento...',
+        
+        new Swal ({
+          title:'Espere un momento...',
               allowOutsideClick:false
             })
-            Swal.showLoading()
+        Swal.showLoading()
 
-             await this.updateEntry(this.entry)
+        const picture =  await uploadImage(this.file)
+
+        this.entry.picture=picture
+
+           
+
+        if(this.entry.id){
+          
+              await this.updateEntry(this.entry)
            }
-           else{
-           const id=  await this.createEntry(this.entry)
+          else{
+              const id=  await this.createEntry(this.entry)
 
-           this.$router.push({name:'entry',params: {id}})
+              this.$router.push({name:'entry',params: {id}})
            }
 
+          this.file=null
           Swal.fire('Guardado', 'Entrada registrada con éxito','success')
-
         },
         async onDeleteEntry() {
 
@@ -199,9 +214,8 @@ export default {
           },
 
 
-        onSelectimage(){
-
-            console.log(this.$refs)
+        onSelectImage(){
+            this.$refs.imageSelector.click()
 
         }
     },

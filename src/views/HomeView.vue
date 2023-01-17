@@ -1,5 +1,4 @@
-<!-- eslint-disable prettier/prettier -->
-<!-- eslint-disable prettier/prettier -->
+ 
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
