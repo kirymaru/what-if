@@ -1,64 +1,52 @@
 //export const myactions = (commit) => {
 
-import diarioApi from "@/api/diarioapi"
-import { setEntries } from "./mutations"
+import diarioApi from "@/api/diarioapi";
+import { setEntries } from "./mutations";
 
 //}
 
+export const loadEntries = async ({ commit }) => {
+  const { data } = await diarioApi.get("/entries.json");
 
+  if (!data) {
+    commit("setEntries", []);
+    return;
+  }
+  const entries = [];
+  for (let id of Object.keys(data)) {
+    entries.push({
+      id,
+      ...data[id],
+    });
+  }
+  commit("setEntries", entries);
+};
 
-export const loadEntries = async({ commit }) => {
+export const updateEntry = async ({ commit }, entry) => {
+  const { date, picture, text } = entry;
+  const dataToSave = { date, picture, text };
 
-    const { data } = await diarioApi.get('/entries.json')
+  const resp = await diarioApi.put(`/entries/${entry.id}.json`, dataToSave);
+  console.log(resp);
 
-    if (!data) {
-        commit('setEntries', [])
-        return
-    }
-    const entries = []
-    for (let id of Object.keys(data)) {
-        entries.push({
-            id,
-            ...data[id]
-        })
-    }
-    commit('setEntries', entries)
+  commit("updateEntry", { ...entry });
+};
 
+export const createEntry = async ({ commit }, entry) => {
+  const { date, picture, text } = entry;
+  const dataToSave = { date, picture, text };
 
-}
+  const { data } = await diarioApi.post(`/entries.json`, dataToSave);
 
-export const updateEntry = async({ commit }, entry) => {
-    const { date, picture, text } = entry
-    const dataToSave = { date, picture, text }
+  dataToSave.id = data.name;
 
-    const resp = await diarioApi.put(`/entries/${entry.id}.json`, dataToSave)
-    console.log(resp)
+  commit("addEntry", dataToSave);
 
-    commit('updateEntry', {...entry })
-}
+  return data.name;
+};
+export const deleteEntry = async ({ commit }, id) => {
+  await diarioApi.delete(`/entries/${id}.json`);
+  commit("deleteEntry", id);
 
-
-
-
-
-export const createEntry = async({ commit }, entry) => {
-    const { date, picture, text } = entry
-    const dataToSave = { date, picture, text }
-
-    const { data } = await diarioApi.post(`/entries.json`, dataToSave)
-
-    dataToSave.id = data.name
-
-    commit('addEntry', dataToSave)
-
-
-
-    return data.name
-}
-export const deleteEntry = async({ commit }, id) => {
-
-    await diarioApi.delete(`/entries/${ id }.json`)
-    commit('deleteEntry', id)
-
-    return id
-}
+  return id;
+};
